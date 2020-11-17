@@ -3,7 +3,7 @@ const db = require('../models')
 //working
 const index = (req, res) => {
     db.game.findAll().then((foundGames) => {
-        if(!foundGames) return res.json({
+        if (!foundGames) return res.json({
             message: 'No Games found in database.'
         })
 
@@ -13,14 +13,14 @@ const index = (req, res) => {
 
 //not working
 const show = (req, res) => {
-  console.log('in the show route')
-  console.log(req.params)
-  //not sure React side?
+    console.log('in the show route')
+    console.log(req.params)
+    //not sure React side?
     db.game.findByPk(req.params.id).then((foundGame) => {
         if (!foundGame) return res.json({
             message: 'Game with provided ID not found.'
         })
-        
+
         res.status(200).json({ game: foundGame })
     })
 }
@@ -36,11 +36,11 @@ const create = (req, res) => {
 //not sure need to get show page working first
 const update = (req, res) => {
     db.game.update({
-      ...req.body
+        ...req.body
     }, {
-      where: {
-        id: req.params.id
-      }
+        where: {
+            id: req.params.id
+        }
     }).then((updatedGame) => {
         if (!updatedGame) return res.json({
             message: "No game with that ID found."
@@ -52,7 +52,7 @@ const update = (req, res) => {
 //not sure
 const destroy = (req, res) => {
     db.game.destroy({
-      where: { id: req.params.id }
+        where: { id: req.params.id }
     }).then(() => {
         res.status(200)
     })
