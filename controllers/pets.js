@@ -42,30 +42,16 @@ const show = (req, res) => {
 const create = (req, res) => {
     db.pet.create(req.body).then((savedPet) => {
         console.log("~~~~~~~~ ARE WE HERE?", req.body.species)
-        db.species.findOrCreate({where: {type: req.body.species}})//this is where we are stuck
-        .then((foundOrCreatedSpecies) => {
-            console.log("~~~~~~~~", foundOrCreatedSpecies)
-            savedPet.addSpecies(foundOrCreatedSpecies[0].dataValues.id).then((petInfo) => {
-                res.status(200).json({ pet: savedPet })
+        db.species.findOrCreate({ where: { type: req.body.species } })//this is where we are stuck
+            .then((foundOrCreatedSpecies) => {
+                console.log("~~~~~~~~", foundOrCreatedSpecies)
+                savedPet.addSpecies(foundOrCreatedSpecies[0].dataValues.id).then((petInfo) => {
+                    res.status(200).json({ pet: savedPet })
+                })
             })
-        })
     })
 }
 
-
-
-// const create = (req, res) => {
-//     db.pet.create(req.body).then((savedPet) => {
-//         db.species.create({
-//             type: req.body 
-//         })
-//     }
-    
-    
-//     => {
-//         res.status(200).json({ pet: savedPet })
-//     })
-// }
 
 //not sure need to get show page working first// me neither
 const update = (req, res) => {
@@ -85,10 +71,19 @@ const update = (req, res) => {
 }
 //DELETE
 const destroy = (req, res) => {
-    db.pet.destroy({
-        where: { id: req.params.id }
-    }).then(() => {
-        res.status(200)
+    console.log("IS THIS ANYTHING??? ~~~~~", req.body)
+    db.pet.findByPk(req.body.petId).then((foundPet) => {
+        // console.log(foundPet)
+        db.species.findByPk(req.body.speciesId).then((foundSpecies) => {
+            //console.log(foundPet)
+            foundPet.removeSpecies(foundSpecies)
+        }).then(() => {
+            db.pet.destroy({
+                where: { id: req.body.petId }
+            }).then(() => {
+                res.status(200)
+            })
+        })
     })
 }
 
