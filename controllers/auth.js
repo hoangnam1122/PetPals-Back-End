@@ -9,9 +9,10 @@ const login = (req, res) => {
 
 const register = (req, res) => {
   // validate the POSTed data - making sure we have a name, an email, a pw
-  const { name, email, password } = req.body
+  const { firstName, lastName, birthdate, email, password } = req.body
+  console.log(req.body)
 
-  if (!name || !email || !password) {
+  if (!firstName || !email || !password) {
     return res.json({
       message: 'Please enter a name, an email, and a password'
     })
@@ -24,16 +25,18 @@ const register = (req, res) => {
     if (foundUser) return res.json({
       message: "A user with that email already exists"
     })
-
+    console.log('before the creat---------------------')
     // if the user doesnt exist, create and save a user to the DB
     db.user.create({
-      name,
+      firstName,
+      lastName,
+      birthdate,
       email,
       password
-    }).then((newUser) => {
-      res.json(newUser)
     })
-
+      .then((newUser) => {
+        res.json(newUser)
+      })
   })
 }
 

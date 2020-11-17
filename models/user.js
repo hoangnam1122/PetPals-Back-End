@@ -26,6 +26,14 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   user.init({
+    email: {
+      type: DataTypes.STRING,
+      validate: {
+        isEmail: {
+          msg: 'Invalid email address'
+        }
+      }
+    },
     firstName: {
       type: DataTypes.STRING,
       validate: {
@@ -45,14 +53,6 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     birthdate: DataTypes.STRING,
-    email: {
-      type: DataTypes.STRING,
-      validate: {
-        isEmail: {
-          msg: 'Invalid email address'
-        }
-      }
-    },
     password: {
       type: DataTypes.STRING,
       validate: {
@@ -66,5 +66,15 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'user',
   });
+
+  user.beforeCreate((pendingUser, options) => {
+    if (pendingUser && pendingUser.password) {
+      // hash the password
+      let hash = bcrypt.hashSync(pendingUser.password, 12);
+      // store the hash as the user's password
+      pendingUser.password = hash;
+    }
+  })
+
   return user;
 };
