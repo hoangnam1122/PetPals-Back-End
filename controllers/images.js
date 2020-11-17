@@ -1,57 +1,41 @@
 const db = require('../models')
 
-//working
+//FIND ALL IMAGES
 const index = (req, res) => {
-    db.game.findAll().then((foundGames) => {
-        if (!foundGames) return res.json({
-            message: 'No Games found in database.'
+    db.images.findAll().then((foundImages) => {
+        if (!foundImages) return res.json({
+            message: 'No Images found in database.'
         })
 
-        res.status(200).json({ games: foundGames });
+        res.status(200).json({ images: foundImages });
     })
 }
 
-//not working
+//might not need show one image... 
 const show = (req, res) => {
     console.log('in the show route')
     console.log(req.params)
-    //not sure React side?
-    db.game.findByPk(req.params.id).then((foundGame) => {
-        if (!foundGame) return res.json({
-            message: 'Game with provided ID not found.'
+    db.image.findByPk(req.params.id).then((foundImage) => {
+        if (!foundImage) return res.json({
+            message: 'Image with provided ID not found.'
         })
 
-        res.status(200).json({ game: foundGame })
+        res.status(200).json({ image: foundImage })
     })
 }
 
-//working
+//CREATE A Image
 const create = (req, res) => {
-    db.game.create(req.body).then((savedGame) => {
-        // Validations and error handling here
-        res.status(200).json({ game: savedGame })
+    db.image.create(req.body).then((savedImage) => {
+        res.status(200).json({ image: savedImage })
     })
 }
 
-//not sure need to get show page working first
-const update = (req, res) => {
-    db.game.update({
-        ...req.body
-    }, {
-        where: {
-            id: req.params.id
-        }
-    }).then((updatedGame) => {
-        if (!updatedGame) return res.json({
-            message: "No game with that ID found."
-        })
-        // Validations and error handling here
-        res.status(200).json({ game: updatedGame })
-    })
-}
-//not sure
+//WE DONT NEED AN EDIT PHOTO
+
+//DELETE
 const destroy = (req, res) => {
-    db.game.destroy({
+    db.image.destroy({
         where: { id: req.params.id }
     }).then(() => {
         res.status(200)
@@ -63,6 +47,5 @@ module.exports = {
     index,
     show,
     create,
-    update,
     destroy
 }
