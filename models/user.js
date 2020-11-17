@@ -15,7 +15,8 @@ module.exports = (sequelize, DataTypes) => {
       models.user.hasMany(models.pet)
       models.user.hasMany(models.comment)
       models.user.hasMany(models.post)
-      models.user.hasMany(models.image)
+      models.user.hasMany(models.image)//this is all pics
+      models.user.belongsToMany(models.image, { through: "userImage" })//this is the profile pic
     }
     validPassword(passwordTyped) {
       return bcrypt.compareSync(passwordTyped, this.password);

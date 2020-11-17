@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       models.pet.belongsTo(models.user)
       models.pet.belongsToMany(models.species, { through: "petSpecies" })
+      models.pet.belongsToMany(models.image, { through: "petImage" })
     }
   };
   pet.init({
