@@ -30,13 +30,42 @@ const show = (req, res) => {
     })
 }
 
-//working
+//working//it'll be ok if req.body has extra data
+// const create = (req, res) => {
+//     console.log(req.body)
+//     db.pet.create(req.body).then((savedPet) => {
+//         res.status(200).json({ pet: savedPet })
+//     })
+// }
+
+
 const create = (req, res) => {
     db.pet.create(req.body).then((savedPet) => {
-        // Validations and error handling here--are there?
-        res.status(200).json({ pet: savedPet })
+        console.log("~~~~~~~~ ARE WE HERE?", req.body.species)
+        db.species.findOrCreate({where: {type: req.body.species}})//this is where we are stuck
+        .then((foundOrCreatedSpecies) => {
+            console.log("~~~~~~~~", foundOrCreatedSpecies)
+            savedPet.addSpecies(foundOrCreatedSpecies[0].dataValues.id).then((petInfo) => {
+                res.status(200).json({ pet: savedPet })
+            })
+        })
     })
 }
+
+
+
+// const create = (req, res) => {
+//     db.pet.create(req.body).then((savedPet) => {
+//         db.species.create({
+//             type: req.body 
+//         })
+//     }
+    
+    
+//     => {
+//         res.status(200).json({ pet: savedPet })
+//     })
+// }
 
 //not sure need to get show page working first// me neither
 const update = (req, res) => {
