@@ -1,57 +1,62 @@
 const db = require('../models')
 
+//home page display
+//profile pets display
+//show all pets display
+//edit a pet form placeholders
+//STRETCH GOAL: friends profile--probably the same as profile display just using params
+
 //working
 const index = (req, res) => {
-    db.game.findAll().then((foundGames) => {
-        if (!foundGames) return res.json({
-            message: 'No Games found in database.'
+    db.pet.findAll().then((foundPet) => {
+        if (!foundPet) return res.json({
+            message: 'No pet(s) found in database.'
         })
 
-        res.status(200).json({ games: foundGames });
+        res.status(200).json({ pets: foundPets });
     })
 }
 
-//not working
+//Show one pet--this might serve the info for the placehold in our edit pet form
 const show = (req, res) => {
     console.log('in the show route')
     console.log(req.params)
-    //not sure React side?
-    db.game.findByPk(req.params.id).then((foundGame) => {
-        if (!foundGame) return res.json({
-            message: 'Game with provided ID not found.'
+    db.pet.findByPk(req.params.id).then((foundPet) => {
+        if (!foundPet) return res.json({
+            message: 'Pet with provided ID not found.'
         })
 
-        res.status(200).json({ game: foundGame })
+        res.status(200).json({ pet: foundPet })
     })
 }
 
 //working
 const create = (req, res) => {
-    db.game.create(req.body).then((savedGame) => {
-        // Validations and error handling here
-        res.status(200).json({ game: savedGame })
+    db.pet.create(req.body).then((savedPet) => {
+        // Validations and error handling here--are there?
+        res.status(200).json({ pet: savedPet })
     })
 }
 
-//not sure need to get show page working first
+//not sure need to get show page working first// me neither
 const update = (req, res) => {
-    db.game.update({
+    db.pet.update({
         ...req.body
     }, {
         where: {
             id: req.params.id
         }
-    }).then((updatedGame) => {
-        if (!updatedGame) return res.json({
-            message: "No game with that ID found."
+    }).then((updatedPet) => {
+        if (!updatedPet) return res.json({
+            message: "No pet with that ID found."
         })
         // Validations and error handling here
-        res.status(200).json({ game: updatedGame })
+        res.status(200).json({ pet: updatedPet })
     })
 }
-//not sure
+//DELETE
 const destroy = (req, res) => {
-    db.game.destroy({
+    db.pet.destroy({
         where: { id: req.params.id }
     }).then(() => {
         res.status(200)
