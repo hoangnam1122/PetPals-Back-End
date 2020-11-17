@@ -1,57 +1,55 @@
 const db = require('../models')
 
-//working
+//FIND ALL -- we might need to refine this to find all comments related to one post
 const index = (req, res) => {
-    db.game.findAll().then((foundGames) => {
-        if (!foundGames) return res.json({
-            message: 'No Games found in database.'
+    db.comment.findAll().then((foundComments) => {
+        if (!foundComments) return res.json({
+            message: 'No Comments found in database.'
         })
 
-        res.status(200).json({ games: foundGames });
+        res.status(200).json({ comments: foundComments });
     })
 }
 
-//not working
+//might not need show one comment... 
 const show = (req, res) => {
     console.log('in the show route')
     console.log(req.params)
-    //not sure React side?
-    db.game.findByPk(req.params.id).then((foundGame) => {
-        if (!foundGame) return res.json({
-            message: 'Game with provided ID not found.'
+    db.comment.findByPk(req.params.id).then((foundComment) => {
+        if (!foundComment) return res.json({
+            message: 'Comment with provided ID not found.'
         })
 
-        res.status(200).json({ game: foundGame })
+        res.status(200).json({ comment: foundComment })
     })
 }
 
-//working
+//CREATE A COMMENT
 const create = (req, res) => {
-    db.game.create(req.body).then((savedGame) => {
-        // Validations and error handling here
-        res.status(200).json({ game: savedGame })
+    db.comment.create(req.body).then((savedComment) => {
+        res.status(200).json({ comment: savedComment })
     })
 }
 
-//not sure need to get show page working first
+
+//UPDATE A COMMENT
 const update = (req, res) => {
-    db.game.update({
+    db.comment.update({
         ...req.body
     }, {
         where: {
             id: req.params.id
         }
-    }).then((updatedGame) => {
-        if (!updatedGame) return res.json({
-            message: "No game with that ID found."
+    }).then((updatedComment) => {
+        if (!updatedComment) return res.json({
+            message: "No comment with that ID found."
         })
-        // Validations and error handling here
-        res.status(200).json({ game: updatedGame })
+        res.status(200).json({ comment: updatedComment })
     })
 }
-//not sure
+//DELETE
 const destroy = (req, res) => {
-    db.game.destroy({
+    db.comment.destroy({
         where: { id: req.params.id }
     }).then(() => {
         res.status(200)
