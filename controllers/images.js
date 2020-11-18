@@ -11,18 +11,26 @@ const index = (req, res) => {
     })
 }
 
-//might not need show one image... 
-const show = (req, res) => {
-    console.log('in the show route')
-    console.log(req.params)
-    db.image.findByPk(req.params.id).then((foundImage) => {
-        if (!foundImage) return res.json({
-            message: 'Image with provided ID not found.'
-        })
-
-        res.status(200).json({ image: foundImage })
-    })
+//might not need show one image...//change this to update
+const updateProfilePic = (req, res) => {
+    console.log(req.body)
+    db.user.update({ imgUrl: req.body.imgUrl }, { where: { id: req.body.userId } })
+        .then(
+            res.status(200)
+            //res.status(200).json({ image: foundImage })
+        )
 }
+
+//might not need show one image...//change this to update
+const updatePetPic = (req, res) => {
+    console.log(req.body)
+    db.pet.update({ imgUrl: req.body.imgUrl }, { where: { id: req.body.petId } })
+        .then(
+            res.status(200)
+            //res.status(200).json({ image: foundImage })
+        )
+}
+
 
 //CREATE A Image
 const create = (req, res) => {
@@ -45,7 +53,8 @@ const destroy = (req, res) => {
 
 module.exports = {
     index,
-    show,
+    updateProfilePic,
+    updatePetPic,
     create,
     destroy
 }
