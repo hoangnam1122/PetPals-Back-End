@@ -12,14 +12,14 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       models.pet.belongsTo(models.user)
-      models.pet.belongsToMany(models.species, { through: "petSpecies" })
-      models.pet.belongsToMany(models.image, { through: "petImage" })
+      models.pet.belongsToMany(models.species, {through: 'petSpecies'})
     }
   };
   pet.init({
     name: DataTypes.STRING,
     birthdate: DataTypes.STRING,
-    userId: DataTypes.INTEGER
+    userId: DataTypes.INTEGER,
+    imgUrl: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'pet',
