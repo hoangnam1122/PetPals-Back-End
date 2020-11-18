@@ -16,7 +16,6 @@ module.exports = (sequelize, DataTypes) => {
       models.user.hasMany(models.comment)
       models.user.hasMany(models.post)
       models.user.hasMany(models.image)//this is all pics
-      models.user.belongsToMany(models.image, { through: "userImage" })//this is the profile pic
     }
     validPassword(passwordTyped) {
       return bcrypt.compareSync(passwordTyped, this.password);
@@ -66,7 +65,8 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'Password must be between 8 and 99 characters'
         }
       }
-    }
+    },
+    imgUrl: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'user',

@@ -1,4 +1,7 @@
 module.exports = {
-    games: require('./games'),
+    comments: require('./comments'),
+    images: require('./images'),
+    pets: require('./pets'),
+    posts: require('./posts'),
     auth: require('./auth')
 }

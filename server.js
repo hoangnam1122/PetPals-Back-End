@@ -50,7 +50,10 @@ app.use((req, res, next) => {
 
 
 // middleware - API routes
-app.use('/api/v1/games', routes.games)
+app.use('/api/v1/comments', routes.comments)
+app.use('/api/v1/images', routes.images)
+app.use('/api/v1/pets', routes.pets)
+app.use('/api/v1/posts', routes.posts)
 app.use('/api/v1/auth', routes.auth)
 
 // connection
