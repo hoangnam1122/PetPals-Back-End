@@ -1,6 +1,6 @@
 const db = require('../models')
 
-//working
+//all community posts
 const index = (req, res) => {
     db.post.findAll().then((foundPosts) => {
         if (!foundPosts) return res.json({
@@ -11,11 +11,20 @@ const index = (req, res) => {
     })
 }
 
+//all posts for one user
+const oneUser = (req, res) => {
+    db.post.findAll({
+        where: {userId: req.params.id}
+    }).then((postData) => {
+        if (!postData) return res.json({message: 'No Posts found in database.'})
+        res.status(200).json({ posts: postData });
+    })
+}
+
 //showing single post
 const show = (req, res) => {
     console.log('in the show route')
     console.log(req.params)
-    //not sure React side?
     db.post.findByPk(req.params.id).then((foundPost) => {
         if (!foundPost) return res.json({
             message: 'Post with provided ID not found.'
@@ -25,15 +34,14 @@ const show = (req, res) => {
     })
 }
 
-//working
+//create post
 const create = (req, res) => {
     db.post.create(req.body).then((savedPost) => {
-        // Validations and error handling here
         res.status(200).json({ post: savedPost })
     })
 }
 
-//not sure need to get show page working first
+//updating a post
 const update = (req, res) => {
     db.post.update({
         ...req.body
@@ -45,11 +53,11 @@ const update = (req, res) => {
         if (!updatedPost) return res.json({
             message: "No post with that ID found."
         })
-        // Validations and error handling here
         res.status(200).json({ post: updatedPost })
     })
 }
-//not sure
+
+//Deleting a post
 const destroy = (req, res) => {
     db.post.destroy({
         where: { id: req.params.id }
@@ -61,6 +69,7 @@ const destroy = (req, res) => {
 
 module.exports = {
     index,
+    oneUser,
     show,
     create,
     update,
