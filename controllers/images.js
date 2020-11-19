@@ -2,7 +2,7 @@ const db = require('../models')
 
 //FIND ALL IMAGES
 const index = (req, res) => {
-    db.images.findAll().then((foundImages) => {
+    db.image.findAll().then((foundImages) => {
         if (!foundImages) return res.json({
             message: 'No Images found in database.'
         })
