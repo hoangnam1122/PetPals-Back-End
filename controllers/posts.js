@@ -63,7 +63,7 @@ const destroy = (req, res) => {
     db.post.destroy({
         where: { id: req.params.id }
     }).then(() => {
-        res.status(200)
+        res.status(200).json({ message: "post was deleted" })
     })
 }
 
