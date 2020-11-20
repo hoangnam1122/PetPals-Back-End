@@ -30,7 +30,6 @@ const updatePetPic = (req, res) => {
         )
 }
 
-
 //CREATE A Image
 const create = (req, res) => {
     db.image.create(req.body).then((savedImage) => {
@@ -38,7 +37,6 @@ const create = (req, res) => {
     })
 }
 
-//WE DONT NEED AN EDIT PHOTO
 
 //DELETE
 const destroy = (req, res) => {
