@@ -4,6 +4,7 @@ const ctrl = require('../controllers')
 
 // routes
 router.get('/', ctrl.posts.index)
+router.get('/profile/:id', ctrl.posts.oneUser)
 router.get('/:id', ctrl.posts.show)
 router.post('/', ctrl.posts.create)
 router.put('/:id', ctrl.posts.update)

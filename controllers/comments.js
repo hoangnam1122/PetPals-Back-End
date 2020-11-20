@@ -2,7 +2,9 @@ const db = require('../models')
 
 //FIND ALL -- we might need to refine this to find all comments related to one post
 const index = (req, res) => {
-    db.comment.findAll().then((foundComments) => {
+    db.comment.findAll({
+        where: {postId: req.params.id}
+    }).then((foundComments) => {
         if (!foundComments) return res.json({
             message: 'No Comments found in database.'
         })
@@ -11,7 +13,7 @@ const index = (req, res) => {
     })
 }
 
-//might not need show one comment... 
+//show data for one when edit comment
 const show = (req, res) => {
     console.log('in the show route')
     console.log(req.params)
