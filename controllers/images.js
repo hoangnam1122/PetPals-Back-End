@@ -13,11 +13,10 @@ const index = (req, res) => {
 
 //might not need show one image...//change this to update
 const updateProfilePic = (req, res) => {
-    console.log(req.body)
-    db.user.update({ imgUrl: req.body.imgUrl }, { where: { id: req.body.userId } })
+    console.log(req.params.id)
+    db.user.update({ imgUrl: req.body.imgUrl }, { where: { id: req.params.id } })
         .then(
-            res.status(200)
-            //res.status(200).json({ image: foundImage })
+            res.status(200).json({ message: "profile picture is set" })
         )
 }
 
@@ -46,7 +45,7 @@ const destroy = (req, res) => {
     db.image.destroy({
         where: { id: req.params.id }
     }).then(() => {
-        res.status(200)
+        res.status(200).json({ message: "Image was deleted" })
     })
 }
 
