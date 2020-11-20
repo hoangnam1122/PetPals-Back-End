@@ -59,6 +59,7 @@ const update = (req, res) => {
 
 //Deleting a post
 const destroy = (req, res) => {
+    console.log(req.params.id)
     db.post.destroy({
         where: { id: req.params.id }
     }).then(() => {
