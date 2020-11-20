@@ -8,8 +8,8 @@ const db = require('../models')
 
 //working
 const index = (req, res) => {
-    db.pet.findAll().then((foundPet) => {
-        if (!foundPet) return res.json({
+    db.pet.findAll().then((foundPets) => {
+        if (!foundPets) return res.json({
             message: 'No pet(s) found in database.'
         })
 
