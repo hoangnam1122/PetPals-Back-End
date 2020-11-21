@@ -1,6 +1,6 @@
 const db = require('../models')
 
-//FIND ALL -- we might need to refine this to find all comments related to one post
+//FIND ALL 
 const index = (req, res) => {
     db.comment.findAll({
         where: {postId: req.params.id}
@@ -13,10 +13,8 @@ const index = (req, res) => {
     })
 }
 
-//show data for one when edit comment
+//show data for one comment
 const show = (req, res) => {
-    console.log('in the show route')
-    console.log(req.params)
     db.comment.findByPk(req.params.id).then((foundComment) => {
         if (!foundComment) return res.json({
             message: 'Comment with provided ID not found.'
