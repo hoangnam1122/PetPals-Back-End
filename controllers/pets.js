@@ -1,12 +1,6 @@
 const db = require('../models')
 
-//home page display
-//profile pets display
-//show all pets display
-//edit a pet form placeholders
-//STRETCH GOAL: friends profile--probably the same as profile display just using params
-
-//working
+//Get all pets
 const index = (req, res) => {
     db.pet.findAll().then((foundPets) => {
         if (!foundPets) return res.json({
@@ -17,10 +11,8 @@ const index = (req, res) => {
     })
 }
 
-//Show one pet--this might serve the info for the placehold in our edit pet form
+//Show one pet info
 const show = (req, res) => {
-    console.log('in the show route')
-    console.log(req.params)
     db.pet.findByPk(req.params.id).then((foundPet) => {
         if (!foundPet) return res.json({
             message: 'Pet with provided ID not found.'
@@ -30,21 +22,11 @@ const show = (req, res) => {
     })
 }
 
-//working//it'll be ok if req.body has extra data
-// const create = (req, res) => {
-//     console.log(req.body)
-//     db.pet.create(req.body).then((savedPet) => {
-//         res.status(200).json({ pet: savedPet })
-//     })
-// }
-
-
+//CREATE PET
 const create = (req, res) => {
     db.pet.create(req.body).then((savedPet) => {
-        console.log("~~~~~~~~ ARE WE HERE?", req.body.species)
         db.species.findOrCreate({ where: { type: req.body.species } })//this is where we are stuck
             .then((foundOrCreatedSpecies) => {
-                console.log("~~~~~~~~", foundOrCreatedSpecies)
                 savedPet.addSpecies(foundOrCreatedSpecies[0].dataValues.id).then((petInfo) => {
                     res.status(200).json({ pet: savedPet })
                 })
@@ -53,7 +35,7 @@ const create = (req, res) => {
 }
 
 
-//not sure need to get show page working first// me neither
+//EDIT PET
 const update = (req, res) => {
     db.pet.update({
         ...req.body
@@ -71,11 +53,8 @@ const update = (req, res) => {
 }
 //DELETE
 const destroy = (req, res) => {
-    console.log("IS THIS ANYTHING??? ~~~~~", req.body)
     db.pet.findByPk(req.body.petId).then((foundPet) => {
-        // console.log(foundPet)
         db.species.findByPk(req.body.speciesId).then((foundSpecies) => {
-            //console.log(foundPet)
             foundPet.removeSpecies(foundSpecies)
         }).then(() => {
             db.pet.destroy({
@@ -86,9 +65,6 @@ const destroy = (req, res) => {
         })
     })
 }
-
-
-//don't forget the species in your all pets route
 
 module.exports = {
     index,

@@ -23,8 +23,6 @@ const oneUser = (req, res) => {
 
 //showing single post
 const show = (req, res) => {
-    console.log('in the show route')
-    console.log(req.params)
     db.post.findByPk(req.params.id).then((foundPost) => {
         if (!foundPost) return res.json({
             message: 'Post with provided ID not found.'
@@ -59,7 +57,6 @@ const update = (req, res) => {
 
 //Deleting a post
 const destroy = (req, res) => {
-    console.log(req.params.id)
     db.post.destroy({
         where: { id: req.params.id }
     }).then(() => {
