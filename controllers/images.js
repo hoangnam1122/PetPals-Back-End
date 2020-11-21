@@ -20,14 +20,14 @@ const updateProfilePic = (req, res) => {
 }
 
 //updates pet profile pic 
-// const updatePetPic = (req, res) => {
-//     console.log(req.body)
-//     db.pet.update({ imgUrl: req.body.imgUrl }, { where: { id: req.body.petId } })
-//         .then(
-//             res.status(200)
-//             //res.status(200).json({ image: foundImage })
-//         )
-// }
+const updatePetPic = (req, res) => {
+    console.log(req.body)
+    db.pet.update({ imgUrl: req.body.imgUrl }, { where: { id: req.body.petId } })
+        .then(
+            res.status(200)
+            //res.status(200).json({ image: foundImage })
+        )
+}
 
 //CREATE A Image
 const create = (req, res) => {
