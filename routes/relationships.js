@@ -5,7 +5,7 @@ const ctrl = require('../controllers')
 router.get('/', ctrl.relationships.index)
 // router.get('/profile/:id', ctrl.posts.oneUser)
 router.get('/:id', ctrl.relationships.show)
-// router.post('/', ctrl.posts.create)
+router.post('/', ctrl.relationships.create)
 // router.put('/:id', ctrl.posts.update)
 // router.delete('/:id', ctrl.posts.destroy)
 

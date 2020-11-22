@@ -6,7 +6,6 @@ const index = (req, res) => {
     console.log(req.body.firstName)
     db.user.findAll({
         where:{
-           
             [Op.or]: [ {firstName : {[Op.iLike] : req.body.firstName}},
                        {lastName: {[Op.iLike]: req.body.lastName}}]
         }
@@ -22,54 +21,54 @@ const index = (req, res) => {
 
 //all posts for one user
 const oneUser = (req, res) => {
-    db.post.findAll({
+    db.user.findAll({
         where: {userId: req.params.id}
-    }).then((postData) => {
-        if (!postData) return res.json({message: 'No Posts found in database.'})
-        res.status(200).json({ posts: postData });
+    }).then((userData) => {
+        if (!userData) return res.json({message: 'No users found in database.'})
+        res.status(200).json({ users: userData });
     })
 }
 
-//showing single post
+//showing single user
 const show = (req, res) => {
-    db.post.findByPk(req.params.id).then((foundPost) => {
-        if (!foundPost) return res.json({
-            message: 'Post with provided ID not found.'
+    db.user.findByPk(req.params.id).then((founduser) => {
+        if (!founduser) return res.json({
+            message: 'user with provided ID not found.'
         })
 
-        res.status(200).json({ post: foundPost })
+        res.status(200).json({ user: founduser })
     })
 }
 
-//create post
+//This is when a friend request is sent
 const create = (req, res) => {
-    db.post.create(req.body).then((savedPost) => {
-        res.status(200).json({ post: savedPost })
+    db.relationship.create(req.body).then((saveduser) => {
+        res.status(200).json({ relationship: saveduser })
     })
 }
 
-//updating a post
+//updating a user
 const update = (req, res) => {
-    db.post.update({
+    db.relationship.update({
         ...req.body
     }, {
         where: {
             id: req.params.id
         }
-    }).then((updatedPost) => {
-        if (!updatedPost) return res.json({
-            message: "No post with that ID found."
+    }).then((updateduser) => {
+        if (!updateduser) return res.json({
+            message: "No user with that ID found."
         })
-        res.status(200).json({ post: updatedPost })
+        res.status(200).json({ user: updateduser })
     })
 }
 
-//Deleting a post
+//Deleting a user
 const destroy = (req, res) => {
-    db.post.destroy({
+    db.relationship.destroy({
         where: { id: req.params.id }
     }).then(() => {
-        res.status(200).json({ message: "post was deleted" })
+        res.status(200).json({ message: "user was deleted" })
     })
 }
 
