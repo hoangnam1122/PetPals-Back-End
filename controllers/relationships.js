@@ -19,17 +19,7 @@ const index = (req, res) => {
     })
 }
 
-//all posts for one user
-const oneUser = (req, res) => {
-    db.user.findAll({
-        where: {userId: req.params.id}
-    }).then((userData) => {
-        if (!userData) return res.json({message: 'No users found in database.'})
-        res.status(200).json({ users: userData });
-    })
-}
-
-//showing single user
+//
 const show = (req, res) => {
     db.user.findByPk(req.params.id).then((founduser) => {
         if (!founduser) return res.json({
@@ -40,14 +30,14 @@ const show = (req, res) => {
     })
 }
 
-//This is when a friend request is sent
+// Friend Request
 const create = (req, res) => {
     db.relationship.create(req.body).then((saveduser) => {
         res.status(200).json({ relationship: saveduser })
     })
 }
 
-//updating a user
+//Accept Friend Request
 const update = (req, res) => {
     db.relationship.update({
         ...req.body
@@ -63,7 +53,29 @@ const update = (req, res) => {
     })
 }
 
-//Deleting a user
+// Checking Friendship
+const status = (req,res) => {
+    db.relationship.findAll({
+        where:{
+            userOneId: req.params.userOneId,
+            userTwoId: req.params.userTwoId
+        }
+    }).then(relationship =>{
+        res.status(200).json({ relationship: relationship })
+    })
+}
+
+// Friends List and to check pending request
+const allFriends = (req, res) =>{
+    db.relationship.findAll({
+        where:{
+            [Op.or] : [{userOneId: req.params.UserId},
+                       {userTwoId: req.params.UserId }]
+        }
+    })
+}
+
+//Deleting a users relationship
 const destroy = (req, res) => {
     db.relationship.destroy({
         where: { id: req.params.id }
@@ -75,9 +87,9 @@ const destroy = (req, res) => {
 
 module.exports = {
     index,
-    oneUser,
     show,
     create,
     update,
+    status,
     destroy
 }
