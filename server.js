@@ -55,6 +55,7 @@ app.use('/api/v1/images', routes.images)
 app.use('/api/v1/pets', routes.pets)
 app.use('/api/v1/posts', routes.posts)
 app.use('/api/v1/auth', routes.auth)
+app.use('/api/v1/relationships', routes.relationships)
 
 // connection
 app.listen(port, () => console.log(`Server is running on port ${port}`))
