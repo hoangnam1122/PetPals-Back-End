@@ -3,13 +3,15 @@ const { Op } = require("sequelize");
 
 //Get search results from a user looking up someone by name
 const index = (req, res) => {
-  console.log(req.body.firstName);
+  console.log(req.body.name);
+//   Querry needs to look like this (% part of name %) they need to be wrapped in  % %
   db.user
     .findAll({
+        include : [db.relationship],
       where: {
         [Op.or]: [
-          { firstName: { [Op.iLike]: req.body.firstName } },
-          { lastName: { [Op.iLike]: req.body.lastName } },
+          { firstName: { [Op.iLike]: req.body.name } },
+          { lastName: { [Op.iLike]: req.body.name } }
         ],
       },
     })
@@ -21,7 +23,9 @@ const index = (req, res) => {
         });
 
       res.status(200).json({ user: foundUsers });
-    });
+    }).catch(err =>{
+        console.log(err)
+    })
 };
 
 // Finds one user
@@ -40,7 +44,9 @@ const show = (req, res) => {
 const create = (req, res) => {
   db.relationship.create(req.body).then((saveduser) => {
     res.status(200).json({ relationship: saveduser });
-  });
+  }).catch(err =>{
+      console.log(err)
+  })
 };
 
 //Accept Friend Request

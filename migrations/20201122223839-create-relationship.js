@@ -17,7 +17,7 @@ module.exports = {
       status: {
         type: Sequelize.INTEGER
       },
-      action_user_id: {
+      actionUserId: {
         type: Sequelize.INTEGER
       },
       createdAt: {
