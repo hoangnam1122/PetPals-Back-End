@@ -3,16 +3,15 @@ const { Op } = require("sequelize");
 
 //Get search results from a user looking up someone by name
 const index = (req, res) => {
-
-  let query = `%${req.params.query}%`
-  console.log(query)
-//   Querry needs to look like this (% part of name %) they need to be wrapped in  % %
+  let query = `%${req.params.query}%`;
+  console.log(query);
+  //   Querry needs to look like this (% part of name %) they need to be wrapped in  % %
   db.user
     .findAll({
       where: {
         [Op.or]: [
           { firstName: { [Op.iLike]: query } },
-          { lastName: { [Op.iLike]: query } }
+          { lastName: { [Op.iLike]: query } },
         ],
       },
     })
@@ -24,30 +23,37 @@ const index = (req, res) => {
         });
 
       res.status(200).json({ user: foundUsers });
-    }).catch(err =>{
-        console.log(err)
     })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 // Finds one user
 const show = (req, res) => {
-  db.user.findByPk(req.params.id).then((founduser) => {
-    if (!founduser)
-      return res.json({
-        message: "user with provided ID not found.",
-      });
+  console.log(req.params.id)
+  db.user
+    .findOne({where:{id:req.params.id}, include:[db.pet, db.post, db.image]  })
+    .then((founduser) => {
+      if (!founduser)
+        return res.json({
+          message: "user with provided ID not found.",
+        });
 
-    res.status(200).json({ user: founduser });
-  });
+      res.status(200).json({ user: founduser });
+    });
 };
 
 // Friend Request
 const create = (req, res) => {
-  db.relationship.create(req.body).then((saveduser) => {
-    res.status(200).json({ relationship: saveduser });
-  }).catch(err =>{
-      console.log(err)
-  })
+  db.relationship
+    .create(req.body)
+    .then((saveduser) => {
+      res.status(200).json({ relationship: saveduser });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 //Accept Friend Request
@@ -88,17 +94,19 @@ const status = (req, res) => {
 
 // Friends List and to check pending request
 const allFriends = (req, res) => {
-  db.relationship.findAll({
-    where: {
-      [Op.or]: [
-        { userOneId: req.params.UserId },
-        { userTwoId: req.params.UserId },
-      ],
-      status: 1,
-    },
-  }).then(friendsList =>{
-    res.status(200).json({ friendsList: friendsList });
-  })
+  db.relationship
+    .findAll({
+      where: {
+        [Op.or]: [
+          { userOneId: req.params.UserId },
+          { userTwoId: req.params.UserId },
+        ],
+        status: 1,
+      },
+    })
+    .then((friendsList) => {
+      res.status(200).json({ friendsList: friendsList });
+    });
 };
 
 //Deleting a users relationship
