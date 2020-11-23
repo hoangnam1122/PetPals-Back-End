@@ -3,15 +3,16 @@ const { Op } = require("sequelize");
 
 //Get search results from a user looking up someone by name
 const index = (req, res) => {
-  console.log(req.body.name);
+
+  let query = `%${req.params.query}%`
+  console.log(query)
 //   Querry needs to look like this (% part of name %) they need to be wrapped in  % %
   db.user
     .findAll({
-        include : [db.relationship],
       where: {
         [Op.or]: [
-          { firstName: { [Op.iLike]: req.body.name } },
-          { lastName: { [Op.iLike]: req.body.name } }
+          { firstName: { [Op.iLike]: query } },
+          { lastName: { [Op.iLike]: query } }
         ],
       },
     })
