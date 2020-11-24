@@ -3,5 +3,6 @@ module.exports = {
     images: require('./images'),
     pets: require('./pets'),
     posts: require('./posts'),
-    auth: require('./auth')
+    auth: require('./auth'),
+    relationships: require('./relationships')
 }
