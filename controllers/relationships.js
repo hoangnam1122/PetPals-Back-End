@@ -4,8 +4,6 @@ const { Op } = require("sequelize");
 //Get search results from a user looking up someone by name
 const index = (req, res) => {
   let query = `%${req.params.query}%`;
-  console.log(query);
-  //   Querry needs to look like this (% part of name %) they need to be wrapped in  % %
   db.user
     .findAll({
       where: {
@@ -31,7 +29,6 @@ const index = (req, res) => {
 
 // Finds one user
 const show = (req, res) => {
-  console.log(req.params.id);
   db.user
     .findOne({
       where: { id: req.params.id },
@@ -49,7 +46,6 @@ const show = (req, res) => {
 
 // Friend Request
 const create = (req, res) => {
-  console.log(req.body);
   db.relationship
     .findOrCreate({
       where: {
@@ -71,7 +67,6 @@ const create = (req, res) => {
 
 //Accept Friend Request
 const update = (req, res) => {
-  console.log(req.body, req.params.id);
   db.relationship
     .update(
       {
@@ -107,7 +102,6 @@ const status = (req, res) => {
       if (relationship[0].dataValues.status === 1) {
         res.status(200).json({ friends: true, data: relationship });
       } else {
-        console.log("in here");
         res.status(200).json({ friends: false, data: relationship });
       }
     });
@@ -132,7 +126,6 @@ const allFriends = (req, res) => {
 
 // Pending request
 const pending = (req, res) => {
-  console.log(req.params);
   db.relationship
     .findAll({
       where: {
@@ -146,7 +139,6 @@ const pending = (req, res) => {
       }, include: [{ model: db.user, as: "userOne" }, {model: db.user, as: "userTwo"}],
     })
     .then((foundRelationship) => {
-      console.log(foundRelationship[0].dataValues);
       res.status(200).json({ relationships: foundRelationship });
     });
 };
