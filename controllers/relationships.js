@@ -132,20 +132,23 @@ const allFriends = (req, res) => {
 
 // Pending request
 const pending = (req, res) => {
-  console.log(req.params)
-  db.relationship.findAll({
-    where: {
-      [Op.or]: [
-        { userOneId: req.params.userId },
-        { userTwoId: req.params.userId },
-      ],
-      status: 0,
-      actionUserId: { [Op.ne]: req.params.userId }
-    },
-  }).then(foundRelationship =>{
-    console.log(foundRelationship)
-    res.status(200).json({ relationships: foundRelationship });
-  })
+  console.log(req.params);
+  db.relationship
+    .findAll({
+      where: {
+       
+        [Op.or]: [
+          { userOneId: req.params.userId },
+          { userTwoId: req.params.userId },
+        ],
+        status: 0,
+        actionUserId: { [Op.ne]: req.params.userId },
+      }, include: [{ model: db.user, as: "userOne" }, {model: db.user, as: "userTwo"}],
+    })
+    .then((foundRelationship) => {
+      console.log(foundRelationship[0].dataValues);
+      res.status(200).json({ relationships: foundRelationship });
+    });
 };
 
 //Deleting a users relationship
@@ -167,5 +170,5 @@ module.exports = {
   status,
   allFriends,
   destroy,
-  pending
+  pending,
 };
