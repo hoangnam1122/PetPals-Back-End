@@ -126,19 +126,22 @@ const allFriends = (req, res) => {
 
 // Pending request
 const pending = (req, res) => {
+  const currentUser = parseInt(req.params.userId)
+  console.log(typeof currentUser)
   db.relationship
     .findAll({
       where: {
        
         [Op.or]: [
-          { userOneId: req.params.userId },
-          { userTwoId: req.params.userId },
+          { userOneId: currentUser },
+          { userTwoId: currentUser },
         ],
         status: 0,
-        actionUserId: { [Op.ne]: req.params.userId },
-      }, include: [{ model: db.user, as: "userOne" }, {model: db.user, as: "userTwo"}],
+        actionUserId: { [Op.ne]: currentUser },
+      }, include: [{ model: db.user, as: "userOne",  }, {model: db.user, as: "userTwo",} ],
     })
     .then((foundRelationship) => {
+      console.log(foundRelationship)
       res.status(200).json({ relationships: foundRelationship });
     });
 };
