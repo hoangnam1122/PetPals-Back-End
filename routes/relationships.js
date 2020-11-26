@@ -4,6 +4,7 @@ const ctrl = require('../controllers')
 // routes
 router.get('/search/:query', ctrl.relationships.index)
 router.get('/status/:userOneId/:userTwoId', ctrl.relationships.status)
+router.get('/pending/:userId', ctrl.relationships.pending)
 router.get('/friends/:UserId', ctrl.relationships.allFriends)
 router.get('/:id', ctrl.relationships.show)
 router.post('/', ctrl.relationships.create)

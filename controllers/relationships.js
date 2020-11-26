@@ -31,9 +31,12 @@ const index = (req, res) => {
 
 // Finds one user
 const show = (req, res) => {
-  console.log(req.params.id)
+  console.log(req.params.id);
   db.user
-    .findOne({where:{id:req.params.id}, include:[db.pet, db.post, db.image]  })
+    .findOne({
+      where: { id: req.params.id },
+      include: [db.pet, db.post, db.image],
+    })
     .then((founduser) => {
       if (!founduser)
         return res.json({
@@ -46,8 +49,18 @@ const show = (req, res) => {
 
 // Friend Request
 const create = (req, res) => {
+  console.log(req.body);
   db.relationship
-    .create(req.body)
+    .findOrCreate({
+      where: {
+        userOneId: req.body.userOneId,
+        userTwoId: req.body.userTwoId,
+      },
+      defaults: {
+        status: 0,
+        actionUserId: req.body.actionUserId,
+      },
+    })
     .then((saveduser) => {
       res.status(200).json({ relationship: saveduser });
     })
@@ -58,6 +71,7 @@ const create = (req, res) => {
 
 //Accept Friend Request
 const update = (req, res) => {
+  console.log(req.body, req.params.id);
   db.relationship
     .update(
       {
@@ -70,6 +84,7 @@ const update = (req, res) => {
       }
     )
     .then((updateduser) => {
+      console.log(updateduser);
       if (!updateduser)
         return res.json({
           message: "No user with that ID found.",
@@ -88,11 +103,17 @@ const status = (req, res) => {
       },
     })
     .then((relationship) => {
-      res.status(200).json({ relationship: relationship });
+      console.log(relationship[0].dataValues.status);
+      if (relationship[0].dataValues.status === 1) {
+        res.status(200).json({ friends: true, data: relationship });
+      } else {
+        console.log("in here");
+        res.status(200).json({ friends: false, data: relationship });
+      }
     });
 };
 
-// Friends List and to check pending request
+// Friends List
 const allFriends = (req, res) => {
   db.relationship
     .findAll({
@@ -107,6 +128,24 @@ const allFriends = (req, res) => {
     .then((friendsList) => {
       res.status(200).json({ friendsList: friendsList });
     });
+};
+
+// Pending request
+const pending = (req, res) => {
+  console.log(req.params)
+  db.relationship.findAll({
+    where: {
+      [Op.or]: [
+        { userOneId: req.params.userId },
+        { userTwoId: req.params.userId },
+      ],
+      status: 0,
+      actionUserId: { [Op.ne]: req.params.userId }
+    },
+  }).then(foundRelationship =>{
+    console.log(foundRelationship)
+    res.status(200).json({ relationships: foundRelationship });
+  })
 };
 
 //Deleting a users relationship
@@ -128,4 +167,5 @@ module.exports = {
   status,
   allFriends,
   destroy,
+  pending
 };
