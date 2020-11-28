@@ -7,7 +7,7 @@ router.get('/', ctrl.pets.index)
 router.get('/:id', ctrl.pets.show)
 router.post('/', ctrl.pets.create)
 router.put('/:id', ctrl.pets.update)
-router.delete('/', ctrl.pets.destroy)
+router.delete('/delete/:id', ctrl.pets.destroy)
 
 // exports
 module.exports = router

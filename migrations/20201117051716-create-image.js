@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      imageUrl: {
+      imgUrl: {
         type: Sequelize.STRING
       },
       userId: {

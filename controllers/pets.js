@@ -53,23 +53,29 @@ const update = (req, res) => {
 }
 //DELETE
 const destroy = (req, res) => {
-    db.pet.findByPk(req.body.petId).then((foundPet) => {
-        db.species.findByPk(req.body.speciesId).then((foundSpecies) => {
-            foundPet.removeSpecies(foundSpecies)
-        }).then(() => {
-            db.pet.destroy({
-                where: { id: req.body.petId }
+    db.petSpecies.findByPk(req.params.id).then((foundRelation) => {
+        const speciesId = foundRelation.dataValues.speciesId
+        db.pet.findByPk(req.params.id).then((foundPet) => {
+            db.species.findByPk(speciesId).then((foundSpecies) => {
+                foundPet.removeSpecies(foundSpecies)
             }).then(() => {
-                res.status(200)
+                db.pet.destroy({
+                    where: { id: req.params.id }
+                }).then(() => {
+                    res.status(200).json({ message: "Pet and Species relation destoyed." })
+                })
             })
         })
     })
 }
 
+
+
+
 module.exports = {
-    index,
-    show,
-    create,
-    update,
-    destroy
-}
+            index,
+            show,
+            create,
+            update,
+            destroy
+        }
