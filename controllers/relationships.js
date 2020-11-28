@@ -58,6 +58,7 @@ const create = (req, res) => {
       },
     })
     .then((saveduser) => {
+      console.log(saveduser)
       res.status(200).json({ relationship: saveduser });
     })
     .catch((err) => {
@@ -67,6 +68,7 @@ const create = (req, res) => {
 
 //Accept Friend Request
 const update = (req, res) => {
+  console.log(req.params.id)
   db.relationship
     .update(
       {
@@ -79,7 +81,7 @@ const update = (req, res) => {
       }
     )
     .then((updateduser) => {
-      console.log(updateduser);
+      console.log('updated'+updateduser);
       if (!updateduser)
         return res.json({
           message: "No user with that ID found.",
@@ -124,6 +126,24 @@ const allFriends = (req, res) => {
     });
 };
 
+// friends list profile display
+const friendsListLimit = (req,res) =>{
+  db.relationship
+  .findAll({
+    where: {
+      [Op.or]: [
+        { userOneId: req.params.UserId },
+        { userTwoId: req.params.UserId },
+      ],
+      status: 1,
+    }, limit: 8,
+    include: [{ model: db.user, as: "userOne",  }, {model: db.user, as: "userTwo",} ],
+  })
+  .then((friendsList) => {
+    res.status(200).json({ friendsList: friendsList });
+  });
+}
+
 // Pending request
 const pending = (req, res) => {
   const currentUser = parseInt(req.params.userId)
@@ -164,6 +184,7 @@ module.exports = {
   update,
   status,
   allFriends,
+  friendsListLimit,
   destroy,
   pending,
 };
