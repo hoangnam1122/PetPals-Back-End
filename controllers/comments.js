@@ -52,7 +52,7 @@ const destroy = (req, res) => {
     db.comment.destroy({
         where: { id: req.params.id }
     }).then(() => {
-        res.status(200)
+        res.status(200).json({ comment: "Comment was deleted." })
     })
 }
 
