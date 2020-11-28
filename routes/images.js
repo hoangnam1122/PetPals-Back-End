@@ -4,6 +4,7 @@ const ctrl = require('../controllers')
 
 // routes
 router.get('/', ctrl.images.index)
+router.get('/:limit', ctrl.images.limit)
 router.put('/profilepic/:id', ctrl.images.updateProfilePic)
 router.put('/petpic', ctrl.images.updatePetPic)
 router.post('/', ctrl.images.create)
