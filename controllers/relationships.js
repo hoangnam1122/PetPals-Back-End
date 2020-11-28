@@ -4,8 +4,6 @@ const { Op } = require("sequelize");
 //Get search results from a user looking up someone by name
 const index = (req, res) => {
   let query = `%${req.params.query}%`;
-  console.log(query);
-  //   Querry needs to look like this (% part of name %) they need to be wrapped in  % %
   db.user
     .findAll({
       where: {
@@ -31,9 +29,11 @@ const index = (req, res) => {
 
 // Finds one user
 const show = (req, res) => {
-  console.log(req.params.id)
   db.user
-    .findOne({where:{id:req.params.id}, include:[db.pet, db.post, db.image]  })
+    .findOne({
+      where: { id: req.params.id },
+      include: [db.pet, db.post, db.image],
+    })
     .then((founduser) => {
       if (!founduser)
         return res.json({
@@ -47,8 +47,18 @@ const show = (req, res) => {
 // Friend Request
 const create = (req, res) => {
   db.relationship
-    .create(req.body)
+    .findOrCreate({
+      where: {
+        userOneId: req.body.userOneId,
+        userTwoId: req.body.userTwoId,
+      },
+      defaults: {
+        status: 0,
+        actionUserId: req.body.actionUserId,
+      },
+    })
     .then((saveduser) => {
+      console.log(saveduser)
       res.status(200).json({ relationship: saveduser });
     })
     .catch((err) => {
@@ -58,6 +68,7 @@ const create = (req, res) => {
 
 //Accept Friend Request
 const update = (req, res) => {
+  console.log(req.params.id)
   db.relationship
     .update(
       {
@@ -70,6 +81,7 @@ const update = (req, res) => {
       }
     )
     .then((updateduser) => {
+      console.log('updated'+updateduser);
       if (!updateduser)
         return res.json({
           message: "No user with that ID found.",
@@ -88,11 +100,16 @@ const status = (req, res) => {
       },
     })
     .then((relationship) => {
-      res.status(200).json({ relationship: relationship });
+      console.log(relationship[0].dataValues.status);
+      if (relationship[0].dataValues.status === 1) {
+        res.status(200).json({ friends: true, data: relationship });
+      } else {
+        res.status(200).json({ friends: false, data: relationship });
+      }
     });
 };
 
-// Friends List and to check pending request
+// Friends List
 const allFriends = (req, res) => {
   db.relationship
     .findAll({
@@ -106,6 +123,46 @@ const allFriends = (req, res) => {
     })
     .then((friendsList) => {
       res.status(200).json({ friendsList: friendsList });
+    });
+};
+
+// friends list profile display
+const friendsListLimit = (req,res) =>{
+  db.relationship
+  .findAll({
+    where: {
+      [Op.or]: [
+        { userOneId: req.params.UserId },
+        { userTwoId: req.params.UserId },
+      ],
+      status: 1,
+    }, limit: 8,
+    include: [{ model: db.user, as: "userOne",  }, {model: db.user, as: "userTwo",} ],
+  })
+  .then((friendsList) => {
+    res.status(200).json({ friendsList: friendsList });
+  });
+}
+
+// Pending request
+const pending = (req, res) => {
+  const currentUser = parseInt(req.params.userId)
+  console.log(typeof currentUser)
+  db.relationship
+    .findAll({
+      where: {
+       
+        [Op.or]: [
+          { userOneId: currentUser },
+          { userTwoId: currentUser },
+        ],
+        status: 0,
+        actionUserId: { [Op.ne]: currentUser },
+      }, include: [{ model: db.user, as: "userOne",  }, {model: db.user, as: "userTwo",} ],
+    })
+    .then((foundRelationship) => {
+      console.log(foundRelationship)
+      res.status(200).json({ relationships: foundRelationship });
     });
 };
 
@@ -127,5 +184,7 @@ module.exports = {
   update,
   status,
   allFriends,
+  friendsListLimit,
   destroy,
+  pending,
 };
