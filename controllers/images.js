@@ -2,7 +2,19 @@ const db = require('../models')
 
 //FIND ALL IMAGES
 const index = (req, res) => {
-    db.image.findAll().then((foundImages) => {
+    db.image.findAll({}).then((foundImages) => {
+        if (!foundImages) return res.json({
+            message: 'No Images found in database.'
+        })
+
+        res.status(200).json({ images: foundImages });
+    })
+}
+
+// Get limit
+const limit = (req, res) => {
+    console.log(req.params)
+    db.image.findAll({limit: req.params.limit}).then((foundImages) => {
         if (!foundImages) return res.json({
             message: 'No Images found in database.'
         })
@@ -49,6 +61,7 @@ const destroy = (req, res) => {
 
 module.exports = {
     index,
+    limit,
     updateProfilePic,
     updatePetPic,
     create,
