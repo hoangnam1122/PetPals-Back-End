@@ -2,15 +2,13 @@ const db = require('../models')
 const bcrypt = require('bcrypt')
 
 const login = (req, res) => {
-  console.log('req.user here >>>>>>>>>>>', req.user)
-  console.log('req.session here >>>>>>>>>>>', req.session)
+
   res.json({ user: req.user})
 }
 
 const register = (req, res) => {
   // validate the POSTed data - making sure we have a name, an email, a pw
   const { firstName, lastName, birthdate, email, password } = req.body
-  console.log(req.body)
 
   if (!firstName || !email || !password) {
     return res.json({
@@ -25,7 +23,6 @@ const register = (req, res) => {
     if (foundUser) return res.json({
       message: "A user with that email already exists"
     })
-    console.log('before the creat---------------------')
     // if the user doesnt exist, create and save a user to the DB
     db.user.create({
       firstName,

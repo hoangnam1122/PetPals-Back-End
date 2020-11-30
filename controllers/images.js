@@ -13,7 +13,6 @@ const index = (req, res) => {
 
 // Get limit
 const limit = (req, res) => {
-    console.log(req.params)
     db.image.findAll({limit: req.params.limit}).then((foundImages) => {
         if (!foundImages) return res.json({
             message: 'No Images found in database.'
@@ -33,7 +32,6 @@ const updateProfilePic = (req, res) => {
 
 //updates pet profile pic 
 const updatePetPic = (req, res) => {
-    console.log(req.body)
     db.pet.update({ imgUrl: req.body.imgUrl }, { where: { id: req.body.petId } })
         .then(
             res.status(200)
