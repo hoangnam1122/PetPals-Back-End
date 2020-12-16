@@ -17,7 +17,7 @@ app.use(express.json())
 // middleware - cors
 const corsOptions = {
   // from which URLs do we want to accept requests
-  origin: ['http://localhost:3000'],
+  origin: ['http://localhost:3000', 'https://petpals.azurewebsites.net'], //change this new deployed URL AZURE
   credentials: true, // allow the session cookie to be sent to and from the client
   optionsSuccessStatus: 204
 }
